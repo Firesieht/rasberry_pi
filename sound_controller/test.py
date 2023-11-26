@@ -6,12 +6,12 @@ CHANNELS = 1  # моно
 RATE = int(audio.get_device_info_by_index(1).get('defaultSampleRate'))
 print(RATE)
 # частота дискретизации - кол-во фреймов в секунду
-CHUNK = 4000  # кол-во фреймов за один "запрос" к микрофону - тк читаем по кусочкам
+CHUNK = 4096  # кол-во фреймов за один "запрос" к микрофону - тк читаем по кусочкам
 
 
 in_stream = audio.open(format=FORMAT, channels=CHANNELS,
                        rate=RATE, input=True,
-                       frames_per_buffer=CHUNK*2)
+                       frames_per_buffer=CHUNK)
 
 
 
