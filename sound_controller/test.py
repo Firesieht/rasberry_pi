@@ -11,8 +11,11 @@ in_stream = audio.open(format=FORMAT, channels=CHANNELS,
                        rate=RATE, input=True,
                        frames_per_buffer=CHUNK)
 
+
+
 while True:
     print(in_stream.read(CHUNK))
+
 
 in_stream.stop_stream()
 in_stream.close()
