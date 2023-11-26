@@ -2,14 +2,17 @@ import pyaudio
 import asyncio
 from socket import *
 
+
+CHUNK = 1024
+
+
 def record_microphone(stream):
-    CHUNK = 1024
     while True:
-        data = stream.read(CHUNK)
+        data = stream.read(CHUNK,  exception_on_overflow=False)
         yield data
 
 host = '192.168.0.7'
-port = 777
+port = 5437
 addr = (host,port)
 
 udp_socket = socket(AF_INET, SOCK_DGRAM)
@@ -32,8 +35,7 @@ async def send_audio():
                     channels=1,
                     rate=int(p.get_device_info_by_index(1).get('defaultSampleRate')),
                     input=True,
-                    frames_per_buffer=1024,
-                    input_device_index=mic_device_index)
+                    frames_per_buffer=1024,)
 
     for data in record_microphone(stream):
         udp_socket.sendto(data, addr)
