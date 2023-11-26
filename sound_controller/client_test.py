@@ -1,6 +1,7 @@
 import pyaudio
 import asyncio
 from socket import *
+import sounddevice
 
 def record_microphone(stream):
     CHUNK = 1024
