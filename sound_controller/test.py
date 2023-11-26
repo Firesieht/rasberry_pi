@@ -16,7 +16,7 @@ in_stream = audio.open(format=FORMAT, channels=CHANNELS,
 
 
 while True:
-    print(in_stream.read(CHUNK))
+    print(in_stream.read(CHUNK, exception_on_overflow=False))
 
 
 in_stream.stop_stream()
