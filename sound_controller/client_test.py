@@ -22,7 +22,6 @@ async def send_audio():
     mic_device_index = None
     for i in range(p.get_device_count()):
         device_info = p.get_device_info_by_index(i)
-        print('GFFFGFGFGFFG', device_info)
 
         if device_info['maxInputChannels'] > 0:
             mic_device_index = i
@@ -31,7 +30,6 @@ async def send_audio():
     if mic_device_index is None:
         print("there is no mic")
         return
-    print('GFFFGFGFGFFG',int(p.get_device_info_by_index(1).get('defaultSampleRate')))
     stream = p.open(format=pyaudio.paInt16,
                     channels=1,
                     rate=int(p.get_device_info_by_index(1).get('defaultSampleRate')),
