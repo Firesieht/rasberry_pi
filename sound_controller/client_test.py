@@ -30,7 +30,7 @@ async def send_audio():
 
     stream = p.open(format=pyaudio.paInt16,
                     channels=1,
-                    rate=48000,
+                    rate=int(p.get_device_info_by_index(1).get('defaultSampleRate')),
                     input=True,
                     frames_per_buffer=1024,
                     input_device_index=mic_device_index)
