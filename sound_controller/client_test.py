@@ -3,7 +3,7 @@ import asyncio
 from socket import *
 
 
-CHUNK = 1024
+CHUNK = 512
 
 
 def record_microphone(stream):

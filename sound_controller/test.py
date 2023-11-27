@@ -3,7 +3,7 @@ import pyaudio
 audio = pyaudio.PyAudio()
 FORMAT = pyaudio.paInt16  # глубина звука = 16 бит = 2 байта
 CHANNELS = 1  # моно
-RATE = 16000
+RATE = 44100
 print(RATE)
 # частота дискретизации - кол-во фреймов в секунду
 CHUNK = 1024  # кол-во фреймов за один "запрос" к микрофону - тк читаем по кусочкам
