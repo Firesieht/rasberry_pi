@@ -34,7 +34,7 @@ async def send_audio():
                     channels=1,
                     rate=int(p.get_device_info_by_index(1).get('defaultSampleRate')),
                     input=True,
-                    frames_per_buffer=1024,)
+                    frames_per_buffer=512,)
 
     for data in record_microphone(stream):
         udp_socket.sendto(data, addr)
