@@ -80,6 +80,7 @@ class AudioSenderController:
 
 
 controller = AudioSenderController('192.168.0.7', 5437, 5438)
+controller.get_devices()
 controller.start_send_audio()
 
 
