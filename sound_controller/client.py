@@ -53,37 +53,44 @@ class AudioSenderController:
             yield data
     
     def start_send_audio(self):
+        stream = self.audio.open(format=pyaudio.paInt16,
+                channels=1,
+                rate=self.RATE,
+                input=True,
+                frames_per_buffer=self.CHUNK,)
+        
+        for data in self.record_microphone(stream):
+            self.udp_socket.sendto(data, self.addr)
 
-
-        async def send_audio():
-            stream = self.audio.open(format=pyaudio.paInt16,
-                    channels=1,
-                    rate=self.RATE,
-                    input=True,
-                    frames_per_buffer=self.CHUNK,)
-            
-            for data in self.record_microphone(stream):
-                self.udp_socket.sendto(data, self.addr)
-
-        asyncio.get_event_loop().run_until_complete(send_audio())
 
     def start_dynamic_stream(self, RATE = 44100, CHANNELS = 1, FORMAT = pyaudio.paInt16 ):
-        
-        async def play_audio():
+        print('START DYNAMIC STREAM')
+        out_stream =self.audio.open(format=FORMAT, channels=CHANNELS,
+                                rate=RATE, output=True)
+        b = b''
+        while True:
+            data, _  = self.dynamic_socket.recvfrom(1024)
+            if data == b'end':
+                out_stream.write(b)
+                b = b''
+            else:
+                b+=data
 
-            out_stream =self.audio.open(format=FORMAT, channels=CHANNELS,
-                                    rate=RATE, output=True)
-            data, _  = self.dynamic_socket.recvfrom(65536)
-            out_stream.write(data)
-
-        asyncio.get_event_loop().run_until_complete(play_audio())
 
 
-controller = AudioSenderController('192.168.0.7', 5437, 5438)
+controller = AudioSenderController('192.168.0.7', 3001, 3002)
 controller.get_devices()
-controller.start_send_audio()
 
 
+from threading import Thread, Lock
+
+
+t1 = Thread(target=controller.start_send_audio)
+t2 = Thread(target=controller.start_dynamic_stream, args=[44100, 2, 2])
+t1.start()
+t2.start()
+t1.join()
+t2.join()
 
 
 # CHUNK = 512 

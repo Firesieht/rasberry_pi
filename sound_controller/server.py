@@ -2,7 +2,7 @@ from socket import *
 import pyaudio
 import asyncio
 import wave
-
+import time
 
 #5437 - порт для микрофона
 #5438 - порт для динамика '192.168.0.7' - хост мака у меня дома
@@ -27,32 +27,44 @@ class AudioServerController:
 
         _, self.dynamic_addr_to_send = self.dynamic_socket.recvfrom(1024)
 
+        self.task_group = asyncio.TaskGroup()
+
     def set_stream_settings(self, FORMAT=pyaudio.paInt16, CHANNELS=1, RATE=44100, CHUNK=512):
         self.RATE = RATE
         self.CHANNELS = CHANNELS
         self.CHUNK = CHUNK
         self.FORMAT = FORMAT
 
-    def play_audio(self, bytes:bytes):
-        self.dynamic_socket.sendto(bytes, self.dynamic_addr_to_send)
+    def play_audio(self, bytes_:bytes):
+        print('len_bytes:', len(bytes_))
+
+        def grouper(iterable, n):
+            args = [iter(iterable)] * n
+            return zip(*args)
+
+        list_data = [bytes(''.join(i), encoding='utf-8') for i in grouper(str(bytes_), 1024)]
+        for data in list_data:
+            self.dynamic_socket.sendto(data, self.dynamic_addr_to_send)
+        
+        self.dynamic_socket.sendto(b'end', self.dynamic_addr_to_send)
+
     
 
     def start_microfone_stream(self, on_get_batch):
         out_stream = self.audio.open(format=self.FORMAT, channels=self.CHANNELS,
                         rate=self.RATE, output=True)
 
-        async def get_mic_stream():
-            while True:
-                data, _ = self.udp_socket.recvfrom(1024)
-                on_get_batch(data)
-                out_stream.write(data)
-        asyncio.get_event_loop().run_until_complete(get_mic_stream())
+        print('start stream')
+        while True:
+            data, _ = self.udp_socket.recvfrom(1024)
+            on_get_batch(data)
+            out_stream.write(data)
+    
 
     def bytes_to_WAV(self, bytes, name):#список байтиков на вход + имя заканчивающиеся на wav
         if type(bytes) != list:
             bytes = [bytes]
-        
-
+            
         file = wave.open(name, "wb")
         file.setnchannels(self.CHANNELS)
         file.setframerate(self.FRAMERATE)
@@ -63,12 +75,46 @@ class AudioServerController:
         
         return file
 
+    def WAW_to_bytes(self, path): #должен быть файл с расширением .waw
+        audio_file = wave.open(path)
+        FORMAT = audio_file.getsampwidth() # глубина звука
+        CHANNELS = audio_file.getnchannels() # количество каналов
+        RATE = audio_file.getframerate() 
+        print(FORMAT, CHANNELS, RATE)
+        N_FRAMES = audio_file.getnframes() 
+        return audio_file.readframes(N_FRAMES)
+
+
+
+from threading import Thread, Lock
+
+controller = AudioServerController('192.168.0.7', 3001, 3002)
+def play():
+    while True:
+        print('play')
+        audio = controller.WAW_to_bytes('example.wav')
+        controller.play_audio(audio)
+        time.sleep(30)
+
+
+def f(x): pass
+
+
+def main():
+    t1 = Thread(target=play, )
+    t2 = Thread(target=controller.start_microfone_stream, args=(f,))
+
+    t1.start()
+    t2.start()
+    t1.join()
+    t2.join()
+
+if __name__ == '__main__':
+    main()
 
 
 
 
-controller = AudioServerController('192.168.0.7', 5437, 5438)
-controller.start_microfone_stream(on_get_batch=lambda x: print(len(x)))
 
 
 
