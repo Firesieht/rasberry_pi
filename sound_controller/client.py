@@ -79,18 +79,18 @@ class AudioSenderController:
 
 
 controller = AudioSenderController('192.168.0.7', 3001, 3002)
-controller.get_devices()
+# controller.get_devices()
 
 
 from threading import Thread, Lock
 
 
 t1 = Thread(target=controller.start_send_audio)
-t2 = Thread(target=controller.start_dynamic_stream, args=[44100, 2, 2])
+# t2 = Thread(target=controller.start_dynamic_stream, args=[44100, 2, 2])
 t1.start()
-t2.start()
+# t2.start()
 t1.join()
-t2.join()
+# t2.join()
 
 
 # CHUNK = 512 
