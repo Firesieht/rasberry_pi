@@ -66,7 +66,7 @@ class AudioSenderController:
     def start_dynamic_stream(self, RATE = 44100, CHANNELS = 1, FORMAT = pyaudio.paInt16 ):
         print('START DYNAMIC STREAM')
         out_stream =self.audio.open(format=FORMAT, channels=CHANNELS,
-                                rate=RATE, output=True)
+                                rate=16000, output=True)
         b = b''
         while True:
             data, _  = self.dynamic_socket.recvfrom(1024)
