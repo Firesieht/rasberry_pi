@@ -44,6 +44,7 @@ class AudioServerController:
 
         list_data = [bytes(''.join(i), encoding='utf-8') for i in grouper(str(bytes_), 1024)]
         for data in list_data:
+            time.sleep(0.1)
             self.dynamic_socket.sendto(data, self.dynamic_addr_to_send)
         
         self.dynamic_socket.sendto(b'end', self.dynamic_addr_to_send)
@@ -101,7 +102,7 @@ def f(x): pass
 
 
 def main():
-    t1 = Thread(target=play, )
+    t1 = Thread(target=play,)
     t2 = Thread(target=controller.start_microfone_stream, args=(f,))
 
     t1.start()
