@@ -42,12 +42,15 @@ class AudioServerController:
             args = [iter(iterable)] * n
             return zip(*args)
 
-        list_data = [bytes(''.join(i), encoding='utf-8') for i in grouper(str(bytes_), 1024)]
+        list_data = [bytes(''.join(i), encoding='utf-8') for i in grouper(str(bytes_), 8192)]
+        print('LEN lIST DATA', len(list_data))
         for data in list_data:
-            time.sleep(0.1)
+            time.sleep(0.001)
             self.dynamic_socket.sendto(data, self.dynamic_addr_to_send)
-        
+
         self.dynamic_socket.sendto(b'end', self.dynamic_addr_to_send)
+        print('len','end2')
+
 
     
 
