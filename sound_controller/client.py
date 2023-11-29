@@ -17,7 +17,7 @@ class AudioSenderController:
         self.FORMAT = pyaudio.paInt16 
         self.CHANNELS = 1  
         self.CHUNK = 512
-        self.RATE = int(self.audio.get_device_info_by_index(1).get('defaultSampleRate'))
+        self.RATE = int(self.audio.get_device_info_by_index(0).get('defaultSampleRate'))
         self.mic_device_index = None
 
         for i in range(self.audio.get_device_count()):
@@ -40,7 +40,7 @@ class AudioSenderController:
         info = self.audio.get_host_api_info_by_index(0)
         numdevices = info.get('deviceCount')
         print(info)
-        print('RATE of MIC',int(self.audio.get_device_info_by_index(1).get('defaultSampleRate')))
+        print('RATE of MIC',int(self.audio.get_device_info_by_index(0).get('defaultSampleRate')))
 
         for i in range(0, numdevices):
             if (self.audio.get_device_info_by_host_api_device_index(0, i).get('maxInputChannels')) > 0:
@@ -86,11 +86,11 @@ from threading import Thread, Lock
 
 
 t1 = Thread(target=controller.start_send_audio)
-# t2 = Thread(target=controller.start_dynamic_stream, args=[44100, 2, 2])
+t2 = Thread(target=controller.start_dynamic_stream, args=[44100, 2, 2])
 t1.start()
-# t2.start()
+t2.start()
 t1.join()
-# t2.join()
+t2.join()
 
 
 # CHUNK = 512 
