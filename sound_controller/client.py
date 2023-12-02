@@ -84,13 +84,13 @@ class AudioSenderController:
                 # file.writeframes(b)
 
                 # Apply the function to each byte and concatenate the results
-                duplicated_bytes = b''.join(map(lambda x: x.to_bytes(1, 'big') * 2, b))
+                # duplicated_bytes = b''.join(map(lambda x: x.to_bytes(1, 'big') * 2, b))
                 print(len(b))
-                print(len(duplicated_bytes))
+                # print(len(duplicated_bytes))
                 #y, s = librosa.load('test.wav', sr=44100) # Downsample 44.1kHz to 8kHz
 
 
-                out_stream.write(duplicated_bytes)
+                out_stream.write(b)
                 b = b''
             else:
                 b+=data

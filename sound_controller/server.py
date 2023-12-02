@@ -97,7 +97,7 @@ controller = AudioServerController('192.168.0.19', 3001, 3002)
 def play():
     while True:
         print('play')
-        audio = controller.WAW_to_bytes('res.wav')
+        audio = controller.WAW_to_bytes('example.wav')
         controller.play_audio(audio)
         time.sleep(30)
 
