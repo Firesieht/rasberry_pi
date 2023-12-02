@@ -77,7 +77,13 @@ class AudioSenderController:
                 print('chunks_recieved:', chunks)
                 chunks = 0
                 print('len_bytes:',len(b))
-                out_stream.write(b)
+                out_b = b''
+
+                for i in b:
+                    out_b += (i+i)
+                print('len_out_bytes:',len(b))
+
+                out_stream.write(out_b)
                 b = b''
             else:
                 b+=data
