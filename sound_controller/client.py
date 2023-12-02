@@ -85,12 +85,12 @@ class AudioSenderController:
 
                 # Apply the function to each byte and concatenate the results
                 duplicated_bytes = b''.join(map(lambda x: x.to_bytes(1, 'big') * 2, b))
-
+                print(len(b))
                 print(len(duplicated_bytes))
                 #y, s = librosa.load('test.wav', sr=44100) # Downsample 44.1kHz to 8kHz
 
 
-                out_stream.write(duplicated_bytes)
+                out_stream.write(b)
                 b = b''
             else:
                 b+=data
@@ -108,7 +108,7 @@ from threading import Thread, Lock
 
 
 t1 = Thread(target=controller.start_send_audio)
-t2 = Thread(target=controller.start_dynamic_stream, args=[44100, 1, pyaudio.paInt16])
+t2 = Thread(target=controller.start_dynamic_stream, args=[24000, 1, pyaudio.paInt16])
 t1.start()
 t2.start()
 t1.join()
