@@ -77,7 +77,9 @@ class AudioSenderController:
             if data == b'end':
                 print('chunks_recieved:', chunks)
                 chunks = 0
-                out_stream.write(b)
+
+                for i in range(0,len(data)-1024, 1024):
+                    out_stream.write(b[i:i+1024])
                 b = b''
             else:
                 b+=data
@@ -87,7 +89,7 @@ class AudioSenderController:
 
 
 
-controller = AudioSenderController('192.168.0.19', 3001, 3002)
+controller = AudioSenderController('192.168.0.7', 3001, 3002)
 # controller.get_devices()
 
 

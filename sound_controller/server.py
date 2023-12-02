@@ -93,7 +93,8 @@ class AudioServerController:
 
 from threading import Thread, Lock
 
-controller = AudioServerController('192.168.0.19', 3001, 3002)
+controller = AudioServerController('192.168.0.7', 3001, 3002)
+
 def play():
     while True:
         print('play')
