@@ -81,9 +81,8 @@ class AudioSenderController:
 
                 for i in range(len(bytearray(b))):
                     out_b += bytes(bytearray[i])
-                    out_b += bytes(bytearray[i])
 
-
+                c
                 print('len_out_bytes:',len(b))
 
                 out_stream.write(out_b)
