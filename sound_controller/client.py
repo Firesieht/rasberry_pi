@@ -2,6 +2,8 @@ import pyaudio
 import asyncio
 from socket import *
 import sys
+import librosa
+import wave
 
 class AudioSenderController:
 
@@ -76,16 +78,17 @@ class AudioSenderController:
             if data == b'end':
                 print('chunks_recieved:', chunks)
                 chunks = 0
-                print('len_bytes:',len(b))
-                out_b = b''
-                out_b = list(map(lambda x: bytes(x), b))
-                # for i in b:
-                #     print(i)
-                #     out_b += bytes(i)
+                file = wave.open('test.wav', "wb")
+                file.setnchannels(1)
+                file.setframerate(24000)
+                file.setsampwidth(2)
+                file.writeframes(b)
 
-                print('len_out_bytes:',len(b))
+                y, s = librosa.load('test.wav', sr=44100) # Downsample 44.1kHz to 8kHz
 
-                out_stream.write(out_b)
+                print(y)
+
+                out_stream.write(y.tobytes())
                 b = b''
             else:
                 b+=data
