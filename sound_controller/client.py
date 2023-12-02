@@ -71,7 +71,7 @@ class AudioSenderController:
         b = b''
         while True:
             data, _  = self.dynamic_socket.recvfrom(8192)
-            print(data)
+            print(len(data))
             if data == b'end':
                 print('len_bytes:',len(b))
                 out_stream.write(b)
