@@ -69,15 +69,19 @@ class AudioSenderController:
         out_stream =self.audio.open(format=FORMAT, channels=CHANNELS,
                                 rate=RATE, output=True)
         b = b''
+        chunks = 0
         while True:
             data, _  = self.dynamic_socket.recvfrom(8192)
             print(len(data))
             if data == b'end':
+                print('chunks_recieved:', chunks)
+                chunks = 0
                 print('len_bytes:',len(b))
                 out_stream.write(b)
                 b = b''
             else:
                 b+=data
+                chunks +=1
 
 
 

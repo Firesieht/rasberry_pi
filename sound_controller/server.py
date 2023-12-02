@@ -38,14 +38,16 @@ class AudioServerController:
     def play_audio(self, bytes_:bytes):
         print('len_bytes:', len(bytes_))
         len_bytes = 0
-
+        chunks = 0
         for i in range(0, len(bytes_)-8193, 8192):
             time.sleep(0.001)
+            chunks += 1
             len_bytes += len(bytes_[i:i+8192])
             self.dynamic_socket.sendto(bytes_[i:i+8192], self.dynamic_addr_to_send)
 
         self.dynamic_socket.sendto(b'end', self.dynamic_addr_to_send)
         print('len_bytes_sended',len_bytes)
+        print('chunks_sended', chunks)
 
 
     
