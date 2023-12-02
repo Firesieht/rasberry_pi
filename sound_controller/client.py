@@ -19,6 +19,7 @@ class AudioSenderController:
         self.CHUNK = 512
         self.RATE = int(self.audio.get_device_info_by_index(0).get('defaultSampleRate'))
         self.mic_device_index = None
+        self.dynamic_play = False
 
         for i in range(self.audio.get_device_count()):
             device_info = self.audio.get_device_info_by_index(i)
@@ -64,15 +65,15 @@ class AudioSenderController:
 
 
     def start_dynamic_stream(self, RATE = 44100, CHANNELS = 1, FORMAT = pyaudio.paInt16 ):
-        print('START DYNAMIC STREAM')
+        print('START DYNAMIC STREAM', RATE, CHANNELS, FORMAT)
         out_stream =self.audio.open(format=FORMAT, channels=CHANNELS,
                                 rate=RATE, output=True)
         b = b''
         while True:
-            data, _  = self.dynamic_socket.recvfrom(1024)
-            print('PLAY AUDIO___', )
+            data, _  = self.dynamic_socket.recvfrom(8192)
 
             if data == b'end':
+                print('len_bytes:',len(b))
                 out_stream.write(b)
                 b = b''
             else:
@@ -80,7 +81,9 @@ class AudioSenderController:
 
 
 
-controller = AudioSenderController('192.168.0.7', 3001, 3002)
+
+
+controller = AudioSenderController('192.168.0.19', 3001, 3002)
 # controller.get_devices()
 
 
@@ -88,7 +91,7 @@ from threading import Thread, Lock
 
 
 t1 = Thread(target=controller.start_send_audio)
-t2 = Thread(target=controller.start_dynamic_stream, args=[44100, 2, 2])
+t2 = Thread(target=controller.start_dynamic_stream, args=[24000, 1, pyaudio.paInt16])
 t1.start()
 t2.start()
 t1.join()

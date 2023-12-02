@@ -4,8 +4,8 @@ import asyncio
 import wave
 import time
 
-#5437 - порт для микрофона
-#5438 - порт для динамика '192.168.0.7' - хост мака у меня дома
+#3001 - порт для микрофона
+#3002 - порт для динамика '192.168.0.7' - хост мака у меня дома
 
 class AudioServerController:
     def __init__(self, host, port_mic, port_dynamic) -> None:
@@ -37,19 +37,15 @@ class AudioServerController:
 
     def play_audio(self, bytes_:bytes):
         print('len_bytes:', len(bytes_))
+        len_bytes = 0
 
-        def grouper(iterable, n):
-            args = [iter(iterable)] * n
-            return zip(*args)
-
-        list_data = [bytes(''.join(i), encoding='utf-8') for i in grouper(str(bytes_), 8192)]
-        print('LEN lIST DATA', len(list_data))
-        for data in list_data:
+        for i in range(0, len(bytes_)-8193, 8192):
             time.sleep(0.001)
-            self.dynamic_socket.sendto(data, self.dynamic_addr_to_send)
+            len_bytes += len(bytes_[i:i+8192])
+            self.dynamic_socket.sendto(bytes_[i:i+8192], self.dynamic_addr_to_send)
 
         self.dynamic_socket.sendto(b'end', self.dynamic_addr_to_send)
-        print('len','end2')
+        print('len_bytes_sended',len_bytes)
 
 
     
@@ -84,7 +80,7 @@ class AudioServerController:
         FORMAT = audio_file.getsampwidth() # глубина звука
         CHANNELS = audio_file.getnchannels() # количество каналов
         RATE = audio_file.getframerate() 
-        print(FORMAT, CHANNELS, RATE)
+        print('SETTINGS FILE', FORMAT, CHANNELS, RATE)
         N_FRAMES = audio_file.getnframes() 
         return audio_file.readframes(N_FRAMES)
 
@@ -92,11 +88,11 @@ class AudioServerController:
 
 from threading import Thread, Lock
 
-controller = AudioServerController('192.168.0.7', 3001, 3002)
+controller = AudioServerController('192.168.0.19', 3001, 3002)
 def play():
     while True:
         print('play')
-        audio = controller.WAW_to_bytes('example.wav')
+        audio = controller.WAW_to_bytes('res.wav')
         controller.play_audio(audio)
         time.sleep(30)
 
