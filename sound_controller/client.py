@@ -90,7 +90,7 @@ class AudioSenderController:
                 #y, s = librosa.load('test.wav', sr=44100) # Downsample 44.1kHz to 8kHz
 
 
-                out_stream.write(b)
+                out_stream.write(duplicated_bytes)
                 b = b''
             else:
                 b+=data
