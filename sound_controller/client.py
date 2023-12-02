@@ -77,8 +77,24 @@ class AudioSenderController:
                 print('chunks_recieved:', chunks)
                 chunks = 0
 
-                out_stream.write(b)
-                print('write')
+                file = wave.open('test.wav', 'wb')
+                file.setnchannels(1)
+                file.setsampwidth(pyaudio.paInt24)
+                file.setframerate(44100)
+                
+                file.writeframes(b)
+                file.close()
+
+                file = wave.open('test.wav', 'rb')
+                
+                data = file.readframes(2048)
+ 
+                while data != '':
+                    out_stream.write(data)
+                    data = file.readframes(2048)
+ 
+
+                print('write_to_stream')
                 b = b''
             else:
                 b+=data
