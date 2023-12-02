@@ -67,8 +67,7 @@ class AudioSenderController:
 
     def start_dynamic_stream(self, RATE = 44100, CHANNELS = 1, FORMAT = pyaudio.paInt16 ):
         print('START DYNAMIC STREAM', RATE, CHANNELS, FORMAT)
-        out_stream =self.audio.open(format=FORMAT, channels=CHANNELS,
-                                rate=RATE, output=True)
+        
         b = b''
         chunks = 0
         while True:
@@ -81,18 +80,18 @@ class AudioSenderController:
                 file.setnchannels(1)
                 file.setsampwidth(pyaudio.paInt24)
                 file.setframerate(44100)
-                
                 file.writeframes(b)
                 file.close()
+                print('file_writed')
 
                 file = wave.open('test.wav', 'rb')
-                
-                data = file.readframes(2048)
- 
+                data = file.readframes(8192)
+                out_stream =self.audio.open(format=FORMAT, channels=CHANNELS,
+                                rate=RATE, output=True)
+
                 while data != '':
                     out_stream.write(data)
-                    data = file.readframes(2048)
- 
+                    data = file.readframes(8192)
 
                 print('write_to_stream')
                 b = b''
