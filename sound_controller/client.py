@@ -79,8 +79,8 @@ class AudioSenderController:
                 print('len_bytes:',len(b))
                 out_b = b''
 
-                for i in range(len(bytearray(b))):
-                    out_b += bytes(bytearray[i])
+                for i in b:
+                    out_b += bytes(i)
 
                 c
                 print('len_out_bytes:',len(b))
