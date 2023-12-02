@@ -78,10 +78,10 @@ class AudioSenderController:
                 chunks = 0
                 print('len_bytes:',len(b))
                 out_b = b''
-
-                for i in b:
-                    print(i)
-                    out_b += bytes(i)
+                out_b = list(map(lambda x: bytes(x), b))
+                # for i in b:
+                #     print(i)
+                #     out_b += bytes(i)
 
                 print('len_out_bytes:',len(b))
 
