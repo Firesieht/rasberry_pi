@@ -80,6 +80,7 @@ class AudioSenderController:
                 out_b = b''
 
                 for i in b:
+                    print(i)
                     out_b += bytes(i)
 
                 print('len_out_bytes:',len(b))
