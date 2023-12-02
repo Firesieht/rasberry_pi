@@ -70,13 +70,13 @@ class AudioSenderController:
         b = b''
         while True:
             data, _  = self.dynamic_socket.recvfrom(1024)
-            print('PLAY AUDIO___', len)
+            print('PLAY AUDIO___', )
 
             if data == b'end':
-                # out_stream.write(b)
+                out_stream.write(b)
                 b = b''
             else:
-                out_stream.write(b)
+                b+=data
 
 
 
