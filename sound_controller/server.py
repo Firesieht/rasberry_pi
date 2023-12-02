@@ -39,11 +39,11 @@ class AudioServerController:
         print('len_bytes:', len(bytes_))
         len_bytes = 0
         chunks = 0
-        for i in range(0, len(bytes_)-8193, 8192):
-            time.sleep(0.03)
+        for i in range(0, len(bytes_)-1025, 1024):
+            time.sleep(0.02)
             chunks += 1
-            len_bytes += len(bytes_[i:i+8192])
-            self.dynamic_socket.sendto(bytes_[i:i+8192], self.dynamic_addr_to_send)
+            len_bytes += len(bytes_[i:i+1024])
+            self.dynamic_socket.sendto(bytes_[i:i+1024], self.dynamic_addr_to_send)
 
         self.dynamic_socket.sendto(b'end', self.dynamic_addr_to_send)
         self.dynamic_socket.sendto(b'end', self.dynamic_addr_to_send)
