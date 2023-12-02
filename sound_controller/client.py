@@ -91,7 +91,7 @@ from threading import Thread, Lock
 
 
 t1 = Thread(target=controller.start_send_audio)
-t2 = Thread(target=controller.start_dynamic_stream, args=[24000, 1, pyaudio.paInt16])
+t2 = Thread(target=controller.start_dynamic_stream, args=[44100, 1, pyaudio.paInt16])
 t1.start()
 t2.start()
 t1.join()

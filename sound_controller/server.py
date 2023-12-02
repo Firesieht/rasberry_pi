@@ -3,7 +3,7 @@ import pyaudio
 import asyncio
 import wave
 import time
-
+import sys
 #3001 - порт для микрофона
 #3002 - порт для динамика '192.168.0.7' - хост мака у меня дома
 
@@ -67,8 +67,8 @@ class AudioServerController:
             
         file = wave.open(name, "wb")
         file.setnchannels(self.CHANNELS)
-        file.setframerate(self.FRAMERATE)
-        file.setsampwidth(self.FORMAT)
+        file.setframerate(self.RATE)
+        file.setsampwidth(2)
 
         for byte in bytes:
             file.writeframes(byte)
@@ -97,7 +97,15 @@ def play():
         time.sleep(30)
 
 
+bytes_f = b''
+
 def f(x): pass
+    # global bytes_f
+    # bytes_f += x
+    # if len(bytes_f) > 1000000:
+    #     controller.bytes_to_WAV(bytes_f, 'out.wav')
+    #     sys.exit()
+
 
 
 def main():
