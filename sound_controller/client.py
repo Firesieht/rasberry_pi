@@ -73,13 +73,12 @@ class AudioSenderController:
         chunks = 0
         while True:
             data, _  = self.dynamic_socket.recvfrom(1024)
-            print(len(data))
             if data == b'end':
                 print('chunks_recieved:', chunks)
                 chunks = 0
 
-                for i in range(0,len(data)-1024, 1024):
-                    out_stream.write(b[i:i+1024])
+                out_stream.write(b)
+                print('write')
                 b = b''
             else:
                 b+=data
