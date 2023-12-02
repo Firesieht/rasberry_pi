@@ -46,6 +46,9 @@ class AudioServerController:
             self.dynamic_socket.sendto(bytes_[i:i+8192], self.dynamic_addr_to_send)
 
         self.dynamic_socket.sendto(b'end', self.dynamic_addr_to_send)
+        self.dynamic_socket.sendto(b'end', self.dynamic_addr_to_send)
+        self.dynamic_socket.sendto(b'end', self.dynamic_addr_to_send)
+
         print('len_bytes_sended',len_bytes)
         print('chunks_sended', chunks)
 
