@@ -1,7 +1,7 @@
 import pyaudio
 import wave
  
-filename = 'res.wav'
+filename = '1.wav'
  
 # Defines a chunk size of 1024 samples per data frame.
 chunk = 8192 
