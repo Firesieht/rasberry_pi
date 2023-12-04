@@ -95,7 +95,7 @@ class AudioSenderController:
                     )
     
 
-                while data != '':
+                while data != b'':
                     out_stream.write(data)
                     data = file.readframes(8192)
                     print(data[:15])
