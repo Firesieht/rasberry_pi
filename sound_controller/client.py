@@ -78,7 +78,7 @@ class AudioSenderController:
 
                 file = wave.open('test.wav', 'wb')
                 file.setnchannels(1)
-                file.setsampwidth(4)
+                file.setsampwidth(3)
                 file.setframerate(48000)
                 file.writeframes(b)
                 file.close()
@@ -116,7 +116,7 @@ from threading import Thread, Lock
 
 
 # t1 = Thread(target=controller.start_send_audio)
-t2 = Thread(target=controller.start_dynamic_stream, args=[48000, 1, 3])
+t2 = Thread(target=controller.start_dynamic_stream, args=[48000, 1, 4])
 # t1.start()
 t2.start()
 # t1.join()
