@@ -3,7 +3,7 @@ import asyncio
 from socket import *
 import sys
 import wave
-
+from time import sleep
 class AudioSenderController:
 
     def __init__(self, host, port_mic, port_dynamic) -> None:
@@ -102,6 +102,8 @@ class AudioSenderController:
 
                 print('write_to_stream')
                 b = b''
+
+                sleep(1)
             else:
                 b+=data
                 chunks +=1
