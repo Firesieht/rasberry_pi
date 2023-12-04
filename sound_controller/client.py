@@ -102,7 +102,8 @@ class AudioSenderController:
 
                 print('write_to_stream')
                 b = b''
-
+                out_stream.stop_stream()
+                out_stream.close()
                 sleep(1)
             else:
                 b+=data
