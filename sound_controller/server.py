@@ -108,8 +108,8 @@ bytes_f = b''
 def f(x): pass
     # global bytes_f
     # bytes_f += x
-    # if len(bytes_f) > 1000000:
-    #     controller.bytes_to_WAV(bytes_f, 'out.wav')
+    # if len(bytes_f) > 6000000:
+    #     controller.bytes_to_WAV(bytes_f, 'out_1m.wav')
     #     sys.exit()
 
 

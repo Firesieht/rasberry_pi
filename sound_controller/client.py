@@ -78,16 +78,21 @@ class AudioSenderController:
 
                 file = wave.open('test.wav', 'wb')
                 file.setnchannels(1)
-                file.setsampwidth(pyaudio.paInt24)
-                file.setframerate(44100)
+                file.setsampwidth(4)
+                file.setframerate(48000)
                 file.writeframes(b)
                 file.close()
                 print('file_writed')
 
                 file = wave.open('test.wav', 'rb')
                 data = file.readframes(8192)
-                out_stream =self.audio.open(format=FORMAT, channels=CHANNELS,
-                                rate=RATE, output=True)
+                out_stream =  self.audio.open(
+                    format = self.audio.get_format_from_width(file.getsampwidth()),
+                    channels = file.getnchannels(),
+                    rate = file.getframerate(),
+                    output = True
+                    )
+    
 
                 while data != '':
                     out_stream.write(data)
@@ -110,11 +115,11 @@ controller = AudioSenderController('192.168.0.7', 3001, 3002)
 from threading import Thread, Lock
 
 
-t1 = Thread(target=controller.start_send_audio)
-t2 = Thread(target=controller.start_dynamic_stream, args=[4800, 1, 4])
-t1.start()
+# t1 = Thread(target=controller.start_send_audio)
+t2 = Thread(target=controller.start_dynamic_stream, args=[48000, 1, 3])
+# t1.start()
 t2.start()
-t1.join()
+# t1.join()
 t2.join()
 
 
