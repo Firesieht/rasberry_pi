@@ -113,7 +113,7 @@ class AudioSenderController:
 
 
 
-controller = AudioSenderController('192.168.0.7', 3001, 3002)
+controller = AudioSenderController('194.146.242.64', 4001, 4002)
 # controller.get_devices()
 
 
