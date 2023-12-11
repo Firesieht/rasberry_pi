@@ -91,6 +91,7 @@ class AudioController:
                     url = self.backend_url + '/command'
                     # requests.post('http://example.com/example/', files={'param_1': (None, 'param 1 value'), 'param_2': (None, 'param 2 value')})
                     r = requests.post(url, data=form_data)
+                    print(r.text)
                     self.last_command_id = int(r.text['id'])
                     print(r.text)
                     command = b''
