@@ -7,7 +7,7 @@ from time import sleep
 from threading import Thread, Lock
 import requests
 from enum import Enum
-
+import json
 
 class Statuses(Enum):
     STREAM_CONTEXT = 'stream'
@@ -92,7 +92,7 @@ class AudioController:
 
                     r = requests.post(url, data=payload, files=files)
                     print(r.text)
-                    self.last_command_id = int(r.text['id'])
+                    self.last_command_id = int(json.loads(r.text)['id'])
                     command = b''
                     
                 b += data
