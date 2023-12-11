@@ -157,11 +157,13 @@ class AudioController:
             if self.last_command_id != -1:
                 url = self.backend_url + '/command/'+  str(self.last_command_id)
                 data = requests.get(url)
-                if data.text['audio_answer'] != 'null':
-                    self.status = Statuses.DYNAMIC_PLAY
-                    print(data.text)
 
-                    file = wave.open(data.text['audio_answer'], 'rb')
+                response = json.loads(data.text)
+                if response['audio_answer'] != 'null':
+                    self.status = Statuses.DYNAMIC_PLAY
+                    print(response)
+
+                    file = wave.open(response['audio_answer'], 'rb')
                     data = file.readframes(8192)
                     out_stream =  self.audio.open(
                         format = self.audio.get_format_from_width(file.getsampwidth()),
