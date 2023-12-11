@@ -82,22 +82,21 @@ class AudioController:
                     file.writeframes(command)
                     file.close()
 
-                    form_data = {
-                        'audio': file, 
-                        'type': 'command'
-                    }
-                    
+
 
                     url = self.backend_url + '/command'
-                    # requests.post('http://example.com/example/', files={'param_1': (None, 'param 1 value'), 'param_2': (None, 'param 2 value')})
-                    r = requests.post(url, data=form_data)
+                    files=[
+                    ('audio',('command.wav',open('command.wav','rb'),'audio/wav'))
+                    ]
+                    payload = {'type': 'command'}
+
+                    r = requests.post(url, data=payload, files=files)
                     print(r.text)
                     self.last_command_id = int(r.text['id'])
-                    print(r.text)
                     command = b''
                     
                 b += data
-                if len(b) >= self.RATE*self.FORMAT/4*10:
+                if len(b) >= self.RATE*self.FORMAT/4*60:
                     print(len(b))
                     file = wave.open('micro.wav', 'wb')
                     file.setnchannels(1)
