@@ -155,7 +155,7 @@ class AudioController:
     def start_dynamic_stream(self):        
         while True:
             if self.last_command_id != -1:
-                url = self.bakcend_url + '/command/'+  str(self.last_command_id)
+                url = self.backend_url + '/command/'+  str(self.last_command_id)
                 data = requests.get(url)
                 if data.text['audio_answer'] != 'null':
                     self.status = Statuses.DYNAMIC_PLAY
