@@ -162,8 +162,17 @@ class AudioController:
                 if response['audio_answer'] != None:
                     self.status = Statuses.DYNAMIC_PLAY
                     print(response)
+                    with open('answer.wav', 'wb') as a:
+                        resp = requests.get(response['audio_answer'])
+                        if resp.status_code == 200:
+                            a.write(resp.content)
+                            print('downloaded')
+                        else:
+                            print(resp.reason)
+                            exit(1)
 
-                    file = wave.open(response['audio_answer'], 'rb')
+                    file = wave.open('answer.wav', "rb")
+                    
                     data = file.readframes(8192)
                     out_stream =  self.audio.open(
                         format = self.audio.get_format_from_width(file.getsampwidth()),

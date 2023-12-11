@@ -1,14 +1,22 @@
 import pyaudio
 import wave
- 
-filename = 'test.wav'
+import requests
+filename = 'http://9293-49-12-205-40.ngrok-free.app/media/transcribe-batches/command_KlkdDUR.wav'
  
 # Defines a chunk size of 1024 samples per data frame.
 chunk = 8192 
 
 # Open sound file  in read binary form.
-file = wave.open(filename, 'rb')
- 
+with open('answer.wav', 'wb') as a:
+    resp = requests.get(filename)
+    if resp.status_code == 200:
+        a.write(resp.content)
+        print('downloaded')
+    else:
+        print(resp.reason)
+        exit(1)
+
+file = wave.open('answer.wav', "rb")
 # Initialize PyAudio
 p = pyaudio.PyAudio()
  
