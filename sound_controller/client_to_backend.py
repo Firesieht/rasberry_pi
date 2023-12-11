@@ -139,9 +139,7 @@ class AudioController:
 
 
         while True:
-            print('_____')
             if GPIO.input(self.BtnPin) == GPIO.LOW: 
-                print('WORK WORK')
                 GPIO.output(self.LedPin, GPIO.HIGH)
                 if self.status != Statuses.COMMAND: 
                     self.status = Statuses.COMMAND
