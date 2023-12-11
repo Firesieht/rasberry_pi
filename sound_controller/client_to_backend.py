@@ -159,7 +159,7 @@ class AudioController:
                 data = requests.get(url)
 
                 response = json.loads(data.text)
-                if response['audio_answer'] != 'null':
+                if response['audio_answer'] != None:
                     self.status = Statuses.DYNAMIC_PLAY
                     print(response)
 
