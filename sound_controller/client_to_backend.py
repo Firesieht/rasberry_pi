@@ -118,6 +118,7 @@ class AudioController:
                     b = b''
 
             elif self.status == Statuses.COMMAND:
+                print('COMMAND DATA')
                 command += data
                 if b != b'': 
                     b = b''
@@ -172,7 +173,7 @@ class AudioController:
                             exit(1)
 
                     file = wave.open('answer.wav', "rb")
-                    
+
                     data = file.readframes(8192)
                     out_stream =  self.audio.open(
                         format = self.audio.get_format_from_width(file.getsampwidth()),
