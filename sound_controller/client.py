@@ -4,6 +4,14 @@ from socket import *
 import sys
 import wave
 from time import sleep
+from enum import Enum
+
+class Statuses(Enum):
+    STREAM_CONTEXT = 'stream'
+    DYNAMIC_PLAY = 'dynamic_play'
+    COMMAND = 'command'
+
+
 class AudioSenderController:
 
     def __init__(self, host, port_mic, port_dynamic) -> None:
@@ -12,8 +20,8 @@ class AudioSenderController:
         self.addr = (host, port_mic)
         self.dynamic_addr = (host, port_dynamic)
         self.udp_socket = socket(AF_INET, SOCK_DGRAM)
-        self.dynamic_socket = socket(AF_INET, SOCK_DGRAM)
-        self.dynamic_socket.sendto(b'rasberry_pi', self.dynamic_addr)
+        self.dynamic_socket = socket(AF_INET, SOCK_STREAM)
+        self.dynamic_socket.connect(self.dynamic_addr)
         self.audio = pyaudio.PyAudio()
         self.FORMAT = pyaudio.paInt16 
         self.CHANNELS = 1  
@@ -21,6 +29,7 @@ class AudioSenderController:
         self.RATE = int(self.audio.get_device_info_by_index(0).get('defaultSampleRate'))
         self.mic_device_index = None
         self.dynamic_play = False
+        self.status = Statuses.STREAM_CONTEXT
 
         for i in range(self.audio.get_device_count()):
             device_info = self.audio.get_device_info_by_index(i)
@@ -62,7 +71,8 @@ class AudioSenderController:
                 frames_per_buffer=self.CHUNK,)
         
         for data in self.record_microphone(stream):
-            self.udp_socket.sendto(data, self.addr)
+            if self.status == Statuses.STREAM_CONTEXT or self.status == Statuses.COMMAND:
+                self.udp_socket.sendto(data, self.addr)
 
 
     def start_dynamic_stream(self, RATE = 44100, CHANNELS = 1, FORMAT = pyaudio.paInt16 ):
@@ -71,12 +81,14 @@ class AudioSenderController:
         b = b''
         chunks = 0
         while True:
-            data, _  = self.dynamic_socket.recvfrom(1024)
-            
-            if data == b'end':
-                print('chunks_recieved:', chunks)
-                chunks = 0
+            data = self.dynamic_socket.recv(1024)
 
+            print('CHUNKS:',chunks, len(b), len(data))
+            print(data[:20])
+            if b'end' in data:
+                self.status = Statuses.DYNAMIC_PLAY
+
+                chunks = 0
                 file = wave.open('test.wav', 'wb')
                 file.setnchannels(1)
                 file.setsampwidth(3)
@@ -99,13 +111,12 @@ class AudioSenderController:
                     out_stream.write(data)
                     data = file.readframes(8192)
                     print(data[:15])
-
-                print('write_to_stream')
                 b = b''
                 out_stream.stop_stream()
                 out_stream.close()
                 sleep(1)
-            else:
+                self.status = Statuses.STREAM_CONTEXT
+            elif data != b'':
                 b+=data
                 chunks +=1
 

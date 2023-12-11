@@ -4,11 +4,15 @@ import asyncio
 import wave
 import time
 import sys
+from enum import Enum
+
 #3001 - порт для микрофона
 #3002 - порт для динамика '192.168.0.7' - хост мака у меня дома
 
+
+
 class AudioServerController:
-    def __init__(self, host, port_mic, port_dynamic) -> None:
+    def __init__(self, host, port_mic, port_dynamic, devices=1) -> None:
         self.audio = pyaudio.PyAudio()
         self.FORMAT = pyaudio.paInt16 
         self.CHANNELS = 1  
@@ -18,14 +22,18 @@ class AudioServerController:
         self.port_micro = 5437
         self.addr_micro = (host,port_mic)
         self.addr_dynamic = (host,port_dynamic)
-
+        self.devices = devices
         self.udp_socket = socket(AF_INET, SOCK_DGRAM)
         self.udp_socket.bind(self.addr_micro)
 
-        self.dynamic_socket = socket(AF_INET, SOCK_DGRAM)
+        self.dynamic_socket = socket(AF_INET, SOCK_STREAM)
         self.dynamic_socket.bind(self.addr_dynamic)
+        self.dynamic_socket.listen(1)
+        self.connections = []
 
-        _, self.dynamic_addr_to_send = self.dynamic_socket.recvfrom(1024)
+        for i in range(devices): 
+            conn = self.dynamic_socket.accept() 
+            self.connections.append(conn)
 
         self.task_group = asyncio.TaskGroup()
 
@@ -36,18 +44,19 @@ class AudioServerController:
         self.FORMAT = FORMAT
 
     def play_audio(self, bytes_:bytes):
-        print('len_bytes:', len(bytes_))
-        len_bytes = 0
-        chunks = 0
-        for i in range(0, len(bytes_)-1025, 1024):
-            time.sleep(0.02)
-            chunks += 1
-            len_bytes += len(bytes_[i:i+1024])
-            self.dynamic_socket.sendto(bytes_[i:i+1024], self.dynamic_addr_to_send)
+        time.sleep(0.5)
+        for connection in self.connections:
+            print('len_bytes:', len(bytes_))
+            len_bytes = 0
+            chunks = 0
+            for i in range(0, len(bytes_)-1025, 1024):
+                chunks += 1
+                len_bytes += len(bytes_[i:i+1024])
+                connection[0].send(bytes_[i:i+1024])
+                # time.sleep(0.005)
+            print('SEND END')
+            connection[0].send(b'end')
 
-        self.dynamic_socket.sendto(b'end', self.dynamic_addr_to_send)
-        self.dynamic_socket.sendto(b'end', self.dynamic_addr_to_send)
-        self.dynamic_socket.sendto(b'end', self.dynamic_addr_to_send)
 
         print('len_bytes_sended',len_bytes)
         print('chunks_sended', chunks)
@@ -105,12 +114,12 @@ def play():
 
 bytes_f = b''
 
-def f(x): pass
-    # global bytes_f
-    # bytes_f += x
-    # if len(bytes_f) > 6000000:
-    #     controller.bytes_to_WAV(bytes_f, 'out_1m.wav')
-    #     sys.exit()
+def f(x): 
+    global bytes_f
+    bytes_f += x
+    if len(bytes_f) > 600000:
+        controller.bytes_to_WAV(bytes_f, 'out.wav')
+        sys.exit()
 
 
 
