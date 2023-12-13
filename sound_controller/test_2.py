@@ -1,7 +1,7 @@
 import pyaudio
 import wave
 import requests
-filename = 'http://9293-49-12-205-40.ngrok-free.app/media/transcribe-batches/command_KlkdDUR.wav'
+filename = 'http://9293-49-12-205-40.ngrok-free.app/media/audio_qADSwBY.wav'
  
 # Defines a chunk size of 1024 samples per data frame.
 chunk = 8192 
@@ -32,8 +32,9 @@ stream = p.open(format = p.get_format_from_width(file.getsampwidth()),
 data = file.readframes(chunk)
  
 # Play the sound by writing the audio data to the stream
-while data != '':
+while data != b'':
     stream.write(data)
+    print(data[:16])
     data = file.readframes(chunk)
  
 stream.stop_stream()
