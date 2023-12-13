@@ -75,6 +75,7 @@ class AudioController:
         command = b''
         for data in self.record_microphone(stream):
             out_stream.write(data)
+            print('write')
             if self.status == Statuses.STREAM_CONTEXT:
                 if command != b'':
                     file = wave.open('command.wav', 'wb')
