@@ -186,14 +186,15 @@ class AudioController:
                     )
 
                     while data != b'':
+                        print(data[:15])
                         out_stream.write(data)
                         data = file.readframes(8192)
-                        print(data[:15])
                     
                     files_played += 1
                     out_stream.stop_stream()
                     out_stream.close()
                     if files_played == len(response['answer_files']) and response['end_process']:
+                        print('END PROCESSS')
                         self.status = Statuses.STREAM_CONTEXT
                         self.last_command_id = -1
                         files_played = 0
