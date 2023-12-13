@@ -167,7 +167,7 @@ class AudioController:
                     self.status = Statuses.DYNAMIC_PLAY
                     print(response)
                     with open('answer.wav', 'wb') as a:
-                        resp = requests.get(response['audio_answer'][files_played])
+                        resp = requests.get(response['answer_files'][files_played])
                         if resp.status_code == 200:
                             a.write(resp.content)
                             print('downloaded')
