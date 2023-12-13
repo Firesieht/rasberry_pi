@@ -69,10 +69,12 @@ class AudioController:
                 rate=self.RATE,
                 input=True,
                 frames_per_buffer=self.CHUNK,)
-        
+        out_stream = self.audio.open(format=self.FORMAT, channels=self.CHANNELS,
+                        rate=self.RATE, output=True)
         b = b''
         command = b''
         for data in self.record_microphone(stream):
+            out_stream.write(data)
             if self.status == Statuses.STREAM_CONTEXT:
                 if command != b'':
                     file = wave.open('command.wav', 'wb')
@@ -81,8 +83,6 @@ class AudioController:
                     file.setframerate(self.RATE)
                     file.writeframes(command)
                     file.close()
-
-
 
                     url = self.backend_url + '/command'
                     files=[
