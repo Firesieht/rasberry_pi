@@ -69,13 +69,10 @@ class AudioController:
                 rate=self.RATE,
                 input=True,
                 frames_per_buffer=self.CHUNK,)
-        out_stream = self.audio.open(format=self.FORMAT, channels=self.CHANNELS,
-                        rate=self.RATE, output=True)
+
         b = b''
         command = b''
         for data in self.record_microphone(stream):
-            out_stream.write(data)
-            print('write')
             if self.status == Statuses.STREAM_CONTEXT:
                 if command != b'':
                     file = wave.open('command.wav', 'wb')
@@ -97,6 +94,7 @@ class AudioController:
                     command = b''
                     
                 b += data
+
                 if len(b) >= self.RATE*self.FORMAT/4*60:
                     print(len(b))
                     file = wave.open('micro.wav', 'wb')
@@ -154,18 +152,22 @@ class AudioController:
         
 
 
-    def start_dynamic_stream(self):        
+    def start_dynamic_stream(self):
+
+        files_played = 0
+
+
         while True:
             if self.last_command_id != -1:
                 url = self.backend_url + '/command/'+  str(self.last_command_id)
                 data = requests.get(url)
 
                 response = json.loads(data.text)
-                if response['audio_answer'] != None:
+                if files_played < len(response['answer_files']):
                     self.status = Statuses.DYNAMIC_PLAY
                     print(response)
                     with open('answer.wav', 'wb') as a:
-                        resp = requests.get(response['audio_answer'])
+                        resp = requests.get(response['audio_answer'][files_played])
                         if resp.status_code == 200:
                             a.write(resp.content)
                             print('downloaded')
@@ -187,12 +189,19 @@ class AudioController:
                         out_stream.write(data)
                         data = file.readframes(8192)
                         print(data[:15])
+                    
+                    files_played += 1
                     out_stream.stop_stream()
                     out_stream.close()
-                    self.status = Statuses.STREAM_CONTEXT
-                    self.last_command_id = -1
+                    if files_played == len(response['answer_files']) and response['end_process']:
+                        self.status = Statuses.STREAM_CONTEXT
+                        self.last_command_id = -1
+                        files_played = 0
+
+                    
                 else: sleep(0.1)
-            else: sleep(0.5)
+            else: 
+                sleep(0.5)
 
 
 
