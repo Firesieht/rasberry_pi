@@ -31,9 +31,9 @@ stream = p.open(format = p.get_format_from_width(file.getsampwidth()),
 # Read data in chunks
 data = file.readframes(chunk)
  
-for i in range(10**7):
-    if i%10**5 == 0:
-        print(i)
+# for i in range(10**7):
+#     if i%10**5 == 0:
+#         print(i)
 # Play the sound by writing the audio data to the stream
 while data != b'':
     print(data[:16])
