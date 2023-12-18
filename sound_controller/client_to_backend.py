@@ -84,7 +84,7 @@ class AudioController:
 
                     url = self.backend_url + '/command'
                     files=[
-                    ('audio',('зенит.wav',open('зенит.wav','rb'),'audio/wav'))
+                    ('audio',('to_send.wav',open('to_send.wav','rb'),'audio/wav'))
                     ]
                     payload = {'type': 'command'}
 
