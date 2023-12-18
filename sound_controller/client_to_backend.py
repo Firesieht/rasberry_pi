@@ -139,6 +139,8 @@ class AudioController:
 
 
         while True:
+            if self.status == Statuses.DYNAMIC_PLAY:
+                 GPIO.output(self.LedPin, GPIO.HIGH)
             if GPIO.input(self.BtnPin) == GPIO.LOW: 
                 GPIO.output(self.LedPin, GPIO.HIGH)
                 if self.status != Statuses.COMMAND: 
