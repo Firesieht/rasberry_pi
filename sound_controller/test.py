@@ -22,7 +22,7 @@ out_stream = audio.open(format=FORMAT, channels=CHANNELS,
 while True:
     data = in_stream.read(CHUNK, exception_on_overflow=False)
     out_stream.write(data)
-    print(data)
+    print(data[:15])
 
 
 in_stream.stop_stream()
