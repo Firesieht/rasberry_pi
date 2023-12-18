@@ -107,7 +107,7 @@ class AudioController:
                     
                     url = self.backend_url + '/command'
                     files=[
-                    ('audio',('micro.wav',open('micro.wav','rb'),'audio/wav'))
+                    ('audio',('micro.wav',open('зенит.wav','rb'),'audio/wav'))
                     ]
                     payload = {'type': 'transcription'}
 
