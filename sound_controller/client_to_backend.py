@@ -123,7 +123,6 @@ class AudioController:
                     b = b''
             else:
                 if b == b'': 
-                    sleep(0.5)
                     continue
                 else: 
                     b = b''

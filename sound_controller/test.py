@@ -13,10 +13,16 @@ in_stream = audio.open(format=FORMAT, channels=CHANNELS,
                        rate=RATE, input=True,
                        frames_per_buffer=CHUNK)
 
+out_stream = audio.open(format=FORMAT, channels=CHANNELS,
+                       rate=RATE, output=True,
+                       frames_per_buffer=CHUNK)
+
 
 
 while True:
-    print(in_stream.read(CHUNK, exception_on_overflow=False))
+    data = in_stream.read(CHUNK, exception_on_overflow=False)
+    out_stream.write(data)
+    print(data)
 
 
 in_stream.stop_stream()
