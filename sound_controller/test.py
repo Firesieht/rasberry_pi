@@ -10,6 +10,7 @@ CHUNK = 1024  # кол-во фреймов за один "запрос" к ми�
 
 
 in_stream = audio.open(format=FORMAT, channels=CHANNELS,
+                        input_device_index=0,
                        rate=RATE, input=True,
                        frames_per_buffer=CHUNK)
 
