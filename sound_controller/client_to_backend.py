@@ -30,7 +30,7 @@ class AudioController:
         self.LedPin = LedPin   # pin11 - светоидиот
         self.BtnPin = BtnPin   # pin13 -  кнопка
         self.answers = []
-        self.id_audio = 0
+        self.id_audio = 10
         self.files_played = 0
         self.files_downloaded = 0
 
