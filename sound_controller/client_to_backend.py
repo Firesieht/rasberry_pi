@@ -183,13 +183,12 @@ class AudioController:
 
                 if len(response['answer_files']) > self.files_downloaded:
                     threads = []
-                    print(response['answer_files'][self.files_downloaded:])
+                    print(self.files_downloaded, response['answer_files'][self.files_downloaded:])
                     for file in response['answer_files'][self.files_downloaded:]:
-                        
+                        self.files_downloaded += 1
                         thread = Thread(target=self.download_audio, args=[file,])
                         threads.append(thread)
                         thread.start()
-                        self.files_downloaded += 1
 
                     for thread in threads:
                         thread.join()
