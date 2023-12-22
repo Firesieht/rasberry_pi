@@ -16,7 +16,6 @@ class Statuses(Enum):
 
 
 class AudioController:
-
     def __init__(self, backend_url, LedPin = 17, BtnPin = 27) -> None:
         self.backend_url = backend_url
         self.audio = pyaudio.PyAudio()
@@ -30,6 +29,8 @@ class AudioController:
         self.last_command_id = -1
         self.LedPin = LedPin   # pin11 - светоидиот
         self.BtnPin = BtnPin   # pin13 -  кнопка
+        self.answers = []
+        self.id_audio = 0
 
         for i in range(self.audio.get_device_count()):
             device_info = self.audio.get_device_info_by_index(i)
@@ -155,57 +156,74 @@ class AudioController:
         
 
 
-    def start_dynamic_stream(self):
-
-        files_played = 0
-
-
+    def download_audio(self, url):
+        with open(f'answer_{self.id_audio}.wav', 'wb') as a:
+            resp = requests.get(url)
+            if resp.status_code == 200:
+                a.write(resp.content)
+                print('downloaded')
+                self.answers.append(f'answer_{self.id_audio}.wav')
+                self.id_audio += 1
+                a.close()
+                
+            else:
+                print(resp.reason)
+                exit(1)
+                
+    def start_listen_answers(self):
         while True:
             if self.last_command_id != -1:
                 url = self.backend_url + '/command/'+  str(self.last_command_id)
                 data = requests.get(url)
-
                 response = json.loads(data.text)
-                if files_played < len(response['answer_files']):
-                    self.status = Statuses.DYNAMIC_PLAY
-                    print(response)
-                    with open('answer.wav', 'wb') as a:
-                        resp = requests.get(response['answer_files'][files_played])
-                        if resp.status_code == 200:
-                            a.write(resp.content)
-                            print('downloaded')
-                        else:
-                            print(resp.reason)
-                            exit(1)
 
-                    file = wave.open('answer.wav', "rb")
+                if len(response['answer_files']) > (len(self.answers) + self.files_played):
+                    threads = []
 
+                    for file in response['answer_files'][(len(self.answers) + self.files_played):]:
+                        thread = Thread(target=self.download_audio, args=[file,])
+                        threads.append(thread)
+                        thread.start()
+
+                    for thread in threads:
+                        thread.join()
+
+                if self.files_played == len(response['answer_files']) and response['end_process']:
+                    print('END PROCESSS')
+                    self.status = Statuses.STREAM_CONTEXT
+                    self.last_command_id = -1
+                    self.files_played = 0
+                    self.answers = []
+
+    def start_dynamic_stream(self):
+
+        self.files_played = 0
+        
+
+        while True:
+            if len(self.answers) > 0:
+                self.status = Statuses.DYNAMIC_PLAY
+                
+                file = wave.open(self.answers[0], "rb")
+                data = file.readframes(8192)
+                out_stream =  self.audio.open(
+                    format = self.audio.get_format_from_width(file.getsampwidth()),
+                    channels = file.getnchannels(),
+                    rate = file.getframerate(),
+                    output = True
+                )
+                while data != b'':
+                    print(data[:15])
+                    out_stream.write(data)
                     data = file.readframes(8192)
-                    out_stream =  self.audio.open(
-                        format = self.audio.get_format_from_width(file.getsampwidth()),
-                        channels = file.getnchannels(),
-                        rate = file.getframerate(),
-                        output = True
-                    )
-
-                    while data != b'':
-                        print(data[:15])
-                        out_stream.write(data)
-                        data = file.readframes(8192)
-                    
-                    files_played += 1
-                    out_stream.stop_stream()
-                    out_stream.close()
-                    if files_played == len(response['answer_files']) and response['end_process']:
-                        print('END PROCESSS')
-                        self.status = Statuses.STREAM_CONTEXT
-                        self.last_command_id = -1
-                        files_played = 0
-
-                    
-                else: sleep(0.1)
+                
+                files_played += 1
+                out_stream.stop_stream()
+                out_stream.close()
+                self.answers.pop(0)
+              
             else: 
-                sleep(0.5)
+                sleep(0.1)
 
 
 
@@ -225,9 +243,12 @@ from threading import Thread, Lock
 t1 = Thread(target=controller.start_send_audio)
 t2 = Thread(target=controller.start_dynamic_stream)
 t3 = Thread(target=controller.start_command_stream)
+t4 = Thread(target=controller.start_listen_answers)
 t1.start()
 t2.start()
 t3.start()
+t4.start()
 t1.join()
 t2.join()
 t3.join()
+t4.join()
