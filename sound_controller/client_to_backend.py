@@ -32,6 +32,7 @@ class AudioController:
         self.answers = []
         self.id_audio = 0
         self.files_played = 0
+        self.files_downloaded = 0
 
         for i in range(self.audio.get_device_count()):
             device_info = self.audio.get_device_info_by_index(i)
@@ -180,13 +181,14 @@ class AudioController:
                 data = requests.get(url)
                 response = json.loads(data.text)
 
-                if len(response['answer_files']) > (len(self.answers) + self.files_played):
+                if len(response['answer_files']) > self.files_downloaded:
                     threads = []
 
                     for file in response['answer_files'][(len(self.answers) + self.files_played):]:
                         thread = Thread(target=self.download_audio, args=[file,])
                         threads.append(thread)
                         thread.start()
+                        self.files_downloaded
 
                     for thread in threads:
                         thread.join()
@@ -197,6 +199,7 @@ class AudioController:
                     self.last_command_id = -1
                     self.files_played = 0
                     self.answers = []
+                    self.files_downloaded = 0
 
     def start_dynamic_stream(self):
 
