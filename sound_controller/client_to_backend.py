@@ -31,6 +31,7 @@ class AudioController:
         self.BtnPin = BtnPin   # pin13 -  кнопка
         self.answers = []
         self.id_audio = 0
+        self.files_played = 0
 
         for i in range(self.audio.get_device_count()):
             device_info = self.audio.get_device_info_by_index(i)
@@ -197,7 +198,6 @@ class AudioController:
 
     def start_dynamic_stream(self):
 
-        self.files_played = 0
         
 
         while True:
