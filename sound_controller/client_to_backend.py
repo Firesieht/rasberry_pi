@@ -162,7 +162,7 @@ class AudioController:
             resp = requests.get(url)
             if resp.status_code == 200:
                 a.write(resp.content)
-                print('downloaded', self.id_audio)
+                print('downloaded', f'answer_{self.id_audio}.wav')
                 self.answers.append(f'answer_{self.id_audio}.wav')
                 self.id_audio += 1
                 a.close()
@@ -204,7 +204,7 @@ class AudioController:
         while True:
             if len(self.answers) > 0:
                 self.status = Statuses.DYNAMIC_PLAY
-                
+                print('ANSWERS:', self.answers)
                 file = wave.open(self.answers[0], "rb")
                 data = file.readframes(8192)
                 out_stream =  self.audio.open(
@@ -214,7 +214,7 @@ class AudioController:
                     output = True
                 )
                 while data != b'':
-                    print(data[:15])
+                    # print(data[:15])
                     out_stream.write(data)
                     data = file.readframes(8192)
                 
