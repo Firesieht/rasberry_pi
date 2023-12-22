@@ -217,7 +217,7 @@ class AudioController:
                     out_stream.write(data)
                     data = file.readframes(8192)
                 
-                files_played += 1
+                self.files_played += 1
                 out_stream.stop_stream()
                 out_stream.close()
                 self.answers.pop(0)
