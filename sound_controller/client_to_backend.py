@@ -160,13 +160,13 @@ class AudioController:
 
     def download_audio(self, url):
         print('start_download', f'answer_{self.id_audio}.wav')
-        with open(f'answer_{self.id_audio}.wav', 'wb') as a:
+        self.id_audio += 1
+        with open(f'answer_{self.id_audio-1}.wav', 'wb') as a:
             resp = requests.get(url)
             if resp.status_code == 200:
                 a.write(resp.content)
                 print('downloaded', f'answer_{self.id_audio}.wav')
                 self.answers.append(f'answer_{self.id_audio}.wav')
-                self.id_audio += 1
                 a.close()
                 sleep(0.5)
                 
