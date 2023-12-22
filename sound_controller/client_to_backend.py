@@ -162,10 +162,11 @@ class AudioController:
             resp = requests.get(url)
             if resp.status_code == 200:
                 a.write(resp.content)
-                print('downloaded')
+                print('downloaded', self.id_audio)
                 self.answers.append(f'answer_{self.id_audio}.wav')
                 self.id_audio += 1
                 a.close()
+                sleep(0.5)
                 
             else:
                 print(resp.reason)
