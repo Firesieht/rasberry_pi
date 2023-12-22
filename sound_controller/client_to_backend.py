@@ -30,7 +30,7 @@ class AudioController:
         self.LedPin = LedPin   # pin11 - светоидиот
         self.BtnPin = BtnPin   # pin13 -  кнопка
         self.answers = []
-        self.id_audio = 10
+        self.id_audio = 0
         self.files_played = 0
         self.files_downloaded = 0
 
@@ -183,8 +183,9 @@ class AudioController:
 
                 if len(response['answer_files']) > self.files_downloaded:
                     threads = []
-
+                    print(response['answer_files'][self.files_downloaded:])
                     for file in response['answer_files'][self.files_downloaded:]:
+                        
                         thread = Thread(target=self.download_audio, args=[file,])
                         threads.append(thread)
                         thread.start()
