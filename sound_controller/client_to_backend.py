@@ -25,7 +25,6 @@ class AudioController:
         self.CHUNK = 512
         self.RATE = int(self.audio.get_device_info_by_index(0).get('defaultSampleRate'))
         self.mic_device_index = None
-        self.dynamic_play = False
         self.status = Statuses.STREAM_CONTEXT
         self.last_command_id = -1
         self.LedPin = LedPin   # pin11 - светоидиот
@@ -179,6 +178,8 @@ class AudioController:
     def start_listen_answers(self):
         while True:
             if self.last_command_id != -1:
+                if self.status != Statuses.DYNAMIC_PLAY:
+                    self.status = Statuses.DYNAMIC_PLAY
                 url = self.backend_url + '/command/'+  str(self.last_command_id)
                 data = requests.get(url)
                 response = json.loads(data.text)
@@ -209,7 +210,6 @@ class AudioController:
 
         while True:
             if len(self.answers) > 0:
-                self.status = Statuses.DYNAMIC_PLAY
                 print('ANSWERS:', self.answers)
                 file = wave.open(self.answers[0], "rb")
                 data = file.readframes(8192)

@@ -3,7 +3,7 @@ import wave
 import requests
 filename = 'http://9293-49-12-205-40.ngrok-free.app/media/audio_qADSwBY.wav'
  
-chunk = 8192 
+chunk = 1024 
 
 with open('answer.wav', 'wb') as a:
     resp = requests.get(filename)
