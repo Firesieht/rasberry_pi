@@ -212,7 +212,7 @@ class AudioController:
             if len(self.answers) > 0:
                 print('ANSWERS:', self.answers)
                 file = wave.open(self.answers[0], "rb")
-                data = file.readframes(1024)
+                data = file.readframes(32768)
                 out_stream =  self.audio.open(
                     format = self.audio.get_format_from_width(file.getsampwidth()),
                     channels = file.getnchannels(),
@@ -222,7 +222,7 @@ class AudioController:
                 while data != b'':
                     # print(data[:15])
                     out_stream.write(data)
-                    data = file.readframes(1024)
+                    data = file.readframes(32768)
                 
                 self.files_played += 1
                 out_stream.stop_stream()
