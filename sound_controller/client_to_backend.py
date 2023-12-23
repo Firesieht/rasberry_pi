@@ -204,6 +204,10 @@ class AudioController:
                     self.answers = []
                     self.files_downloaded = 0
 
+                sleep(1)
+            else:
+                sleep(0.5)
+
     def start_dynamic_stream(self):
 
         
