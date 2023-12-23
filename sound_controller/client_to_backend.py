@@ -8,6 +8,7 @@ from threading import Thread, Lock
 import requests
 from enum import Enum
 import json
+import uuid
 
 class Statuses(Enum):
     STREAM_CONTEXT = 'stream'
@@ -30,7 +31,6 @@ class AudioController:
         self.LedPin = LedPin   # pin11 - светоидиот
         self.BtnPin = BtnPin   # pin13 -  кнопка
         self.answers = []
-        self.id_audio = 0
         self.files_played = 0
         self.files_downloaded = 0
 
@@ -159,9 +159,9 @@ class AudioController:
 
 
     def download_audio(self, url):
-        print('start_download', f'answer_{self.id_audio}.wav')
-        id = self.id_audio
-        self.id_audio += 1
+        id = uuid.uuid4()
+        print('start_download', f'answer_{id}.wav')
+
         
         with open(f'answer_{id}.wav', 'wb') as a:
             resp = requests.get(url)
