@@ -244,7 +244,7 @@ class AudioController:
 # GPIO.output(LedPin, GPIO.LOW)     
 # 	GPIO.cleanup()   
 
-controller = AudioController('https://9293-49-12-205-40.ngrok-free.app/api')
+controller = AudioController('https://591b-178-70-163-195.ngrok-free.app/api')
 # controller.get_devices()
 
 
