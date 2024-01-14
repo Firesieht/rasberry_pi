@@ -159,18 +159,17 @@ class AudioController:
 
     def download_audio(self, url):
         id = uuid.uuid4()
-        print('start_download', f'answer_{id}.wav')
-
+        print('start_download', f'answer_{id}.wav', url)
         
         with open(f'answer_{id}.wav', 'wb') as a:
             resp = requests.get(url)
             if resp.status_code == 200:
                 a.write(resp.content)
-                print('downloaded', f'answer_{id}.wav')
+                print('downloaded', f'answer_{id}.wav', url)
                 self.answers.append(f'answer_{id}.wav')
                 a.close()
                 sleep(0.5)
-                
+                return
             else:
                 print(resp.reason)
                 exit(1)
