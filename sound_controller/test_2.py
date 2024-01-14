@@ -1,7 +1,7 @@
 import pyaudio
 import wave
 import requests
-filename = 'https://591b-178-70-163-195.ngrok-free.app/media/audio_IhsARZ8.wav'
+filename = 'https://ccc9-49-12-205-40.ngrok-free.app/media/audio_IhsARZ8.wav'
  
 chunk = 1024 
 
