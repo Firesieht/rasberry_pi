@@ -11,7 +11,7 @@ now = datetime.now()
 dt_string = now.strftime("%d.%m.%Y_%H-%M-%S")
 
 my_file = open(f"{dt_string}.txt", "w+")
-my_file.write("data")
+my_file.write("data\n" )
 my_file.close()
 
 while True:
