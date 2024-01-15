@@ -17,6 +17,7 @@ my_file.close()
 while True:
     b  =  spi.readbytes(NUM_BYTES)
     my_file = open(f"{dt_string}.txt", "a+")
+    print(type(b), b, type(b[0]), b[0])
     my_file.write(' ,'.join(b))
     my_file.close()
     sleep(1)
