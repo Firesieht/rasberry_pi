@@ -8,7 +8,7 @@ spi.max_speed_hz = 4000000
 NUM_BYTES = 128
 
 now = datetime.now()
-dt_string = now.strftime("%d/%m/%Y_%H:%M:%S")
+dt_string = now.strftime("%d.%m.%Y_%H-%M-%S")
 
 my_file = open(f"{dt_string}.txt", "w+")
 my_file.write("data")
